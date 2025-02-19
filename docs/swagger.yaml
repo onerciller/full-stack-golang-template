@@ -1,0 +1,209 @@
+basePath: /
+definitions:
+  apperror.AppError:
+    description: Application error response
+    properties:
+      code:
+        description: Error code
+        example: BAD_REQUEST
+        type: string
+      message:
+        description: Error message
+        example: Invalid request parameters
+        type: string
+      status:
+        description: HTTP status code
+        example: 400
+        type: integer
+    type: object
+  entity.User:
+    description: User entity with basic information
+    properties:
+      created_at:
+        description: Creation timestamp
+        example: "2024-02-19T14:20:00Z"
+        type: string
+      deleted_at:
+        description: Deletion timestamp, null if not deleted
+        example: "2024-02-19T14:20:00Z"
+        type: string
+      email:
+        description: Email address of the user
+        type: string
+      id:
+        description: Record ID
+        example: 1
+        type: integer
+      password:
+        description: Password (hashed, not exposed in JSON)
+        type: string
+      updated_at:
+        description: Last update timestamp
+        example: "2024-02-19T14:20:00Z"
+        type: string
+      username:
+        description: Username of the user
+        type: string
+    type: object
+  model.AuthResponse:
+    description: Authentication response containing access and refresh tokens
+    properties:
+      access_token:
+        description: JWT access token
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+      refresh_token:
+        description: JWT refresh token
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  model.LoginRequest:
+    description: User login request
+    properties:
+      email:
+        description: Email address of the user
+        example: john@example.com
+        type: string
+      password:
+        description: User's password (min 6 characters)
+        example: password123
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  model.RegisterRequest:
+    description: User registration request
+    properties:
+      email:
+        description: Email address of the user
+        example: john@example.com
+        type: string
+      password:
+        description: Password (min 6 characters)
+        example: password123
+        minLength: 6
+        type: string
+      username:
+        description: Username (min 3 characters)
+        example: johndoe
+        minLength: 3
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  model.UsersResponse:
+    description: Response containing a list of users
+    properties:
+      users:
+        description: List of users
+        items:
+          $ref: '#/definitions/entity.User'
+        type: array
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: your.email@example.com
+    name: API Support
+  description: This is a sample server for a Fullstack Golang Template.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fullstack Golang Template API
+  version: "1.0"
+paths:
+  /api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.UsersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all users
+      tags:
+      - users
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return access tokens
+      parameters:
+      - description: User login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns access and refresh tokens
+          schema:
+            $ref: '#/definitions/model.AuthResponse'
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+      summary: Login user
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided details
+      parameters:
+      - description: User registration details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Returns access and refresh tokens
+          schema:
+            $ref: '#/definitions/model.AuthResponse'
+        "400":
+          description: Invalid request or user already exists
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+      summary: Register a new user
+      tags:
+      - auth
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    description: '"Enter your Bearer token in the format: `Bearer {token}`"'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

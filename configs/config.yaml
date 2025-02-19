@@ -1,0 +1,30 @@
+app:
+  name: "Fullstack Golang Template"
+  env: "local"
+
+server:
+  port: "3000"
+
+db:
+  host: "localhost"
+  port: "5432"
+  user: "postgres"
+  password: "postgres"
+  dbname: "golang_template"
+  sslmode: "disable"
+  timezone: "UTC"
+
+jwt:
+  secret_key: "your-secret-key-here"
+  access_token_expiry: "24h"
+  refresh_token_expiry: "168h"
+
+logger:
+  level: "debug"
+  format: "json"
+  output: "stdout"
+
+swagger:
+  enabled: true
+  version: "1.0.0"
+  path: "/docs"
