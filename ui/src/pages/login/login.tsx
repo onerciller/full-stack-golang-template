@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -16,9 +16,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import Logo from "@/components/auth/logo"
+import { useLogin } from '@/lib/queries/auth'
+import { useAuth } from '@/lib/context/auth-context'
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  username: z.string().min(1, "Please enter a valid username"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   rememberMe: z.boolean().default(false),
 })
@@ -26,13 +28,25 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>
 
 export default function Login() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { isAuthenticated, login } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [generalError, setGeneralError] = useState<string>()
+  
+  const loginMutation = useLogin()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/'
+      navigate(from, { replace: true })
+    }
+  }, [isAuthenticated, navigate, location])
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
       rememberMe: false,
     },
@@ -42,11 +56,17 @@ export default function Login() {
     try {
       setIsLoading(true)
       setGeneralError(undefined)
-      // TODO: Implement login logic
-      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-      console.log('Login attempt:', data)
-    } catch (error) {
-      setGeneralError('Failed to sign in. Please check your credentials.')
+      const response = await loginMutation.mutateAsync({
+        username: data.username,
+        password: data.password,
+      })
+      
+      login(response.access_token, data.rememberMe)
+      
+      const from = location.state?.from?.pathname || '/'
+      navigate(from, { replace: true })
+    } catch (error: any) {
+      setGeneralError(error.message || 'Failed to sign in. Please check your credentials.')
     } finally {
       setIsLoading(false)
     }
@@ -75,15 +95,15 @@ export default function Login() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="email"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      autoComplete="email"
+                      type="text"
+                      placeholder="Enter your username"
+                      autoComplete="username"
                       {...field}
                     />
                   </FormControl>

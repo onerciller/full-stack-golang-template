@@ -13,7 +13,6 @@ interface RegisterRequest {
 
 interface AuthResponse {
   access_token: string
-  refresh_token: string
 }
 
 interface AppError {

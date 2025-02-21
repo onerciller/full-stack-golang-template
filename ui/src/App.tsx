@@ -1,5 +1,7 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Suspense, lazy } from "react"
+import { AuthProvider } from '@/lib/context/auth-context'
+import ProtectedRoute from '@/components/auth/protected-route'
 
 // Layouts
 const AdminLayout = lazy(() => import("./components/layouts/admin-layout"))
@@ -20,23 +22,25 @@ const LoadingFallback = () => (
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          
-          {/* Admin Routes */}
-          <Route path="/" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="users" element={<Users />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="profile" element={<Profile />} />
-          </Route>
-          
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <Router>
+      <AuthProvider>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            {/* Auth Routes */}
+            <Route path="/login" element={<Login />} />
+            
+            {/* Admin Routes */}
+            <Route path="/" element={<AdminLayout />}>
+              <Route index element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="users" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+              <Route path="settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+              <Route path="analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
+              <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            </Route>
+            
+          </Routes>
+        </Suspense>
+      </AuthProvider>
+    </Router>
   )
 }
