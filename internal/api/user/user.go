@@ -168,15 +168,6 @@ func (h *Handler) generateAndStoreTokens(c *fiber.Ctx, userID uint) (*model.Auth
 		return nil, errors.ErrFailedToGenToken.ToBadRequestAppError()
 	}
 
-	// refreshToken, err := h.jwtService.GenerateRefreshToken(userID)
-	// if err != nil {
-	// 	return nil, errors.ErrFailedToGenToken.ToBadRequestAppError()
-	// }
-
-	// if err := h.userStore.UpdateRefreshToken(c.Context(), userID, refreshToken); err != nil {
-	// 	return nil, errors.ErrFailedToStoreToken.ToBadRequestAppError()
-	// }
-
 	return &model.AuthResponse{
 		AccessToken: accessToken,
 	}, nil

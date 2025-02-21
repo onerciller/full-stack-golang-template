@@ -82,7 +82,3 @@ func (s *Store) Delete(ctx context.Context, id uint) error {
 	}
 	return nil
 }
-
-func (s *Store) UpdateRefreshToken(ctx context.Context, userID uint, token string) error {
-	return s.db.Model(&entity.User{}).Where("id = ?", userID).Update("refresh_token", token).Error
-}

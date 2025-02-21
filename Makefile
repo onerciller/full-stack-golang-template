@@ -1,51 +1,51 @@
-# Variables
-API_URL ?= http://localhost:3000
+# Include tools
+include tools/common.mk
 
-# Help
-.PHONY: help
-help: ## Display this help screen
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+# Color definitions
+include tools/color.mk
 
-##@ API Testing
+# Include tools
+include tools/tool.mk
 
-.PHONY: test-api
-test-api: ## Run all API tests
-	@chmod +x scripts/test-api.sh
-	@./scripts/test-api.sh all
+.PHONY: dev ui-start server-start install build clean swag
 
-.PHONY: test-register
-test-register: ## Test register endpoint
-	@chmod +x scripts/test-api.sh
-	@./scripts/test-api.sh register
+# Development commands
+install:
+	@echo "$(BLUE)Installing dependencies$(CNone)"
+	@go mod download
+	@cd ui && npm install
 
-.PHONY: test-login
-test-login: ## Test login endpoint
-	@chmod +x scripts/test-api.sh
-	@./scripts/test-api.sh login
+dev: 
+	@echo "$(BLUE)Starting development environment$(CNone)"
+	@make -j 2 ui-start server-start 
 
-.PHONY: test-users
-test-users: ## Test get users endpoint
-	@chmod +x scripts/test-api.sh
-	@./scripts/test-api.sh users
+swag: $(SWAG)
+	@echo "$(BLUE)Generating swagger docs$(CNone)"
+	@$(SWAG) init
 
-##@ Custom URL Testing
+ui-start:
+	@echo "$(BLUE)Starting UI on http://localhost:5173$(CNone)"
+	@cd ui && npm run dev
 
-.PHONY: test-api-custom
-test-api-custom: ## Run all API tests with custom URL (make test-api-custom API_URL=http://example.com)
-	@chmod +x scripts/test-api.sh
-	@API_URL=$(API_URL) ./scripts/test-api.sh all
+server-start:
+	@echo "$(BLUE)Starting Server on http://localhost:3000$(CNone)"
+	@go run main.go
 
-.PHONY: test-register-custom
-test-register-custom: ## Test register endpoint with custom URL
-	@chmod +x scripts/test-api.sh
-	@API_URL=$(API_URL) ./scripts/test-api.sh register
+build:
+	@echo "$(BLUE)Building application$(CNone)"
+	@go build -o bin/server main.go
+	@cd ui && npm run build
 
-.PHONY: test-login-custom
-test-login-custom: ## Test login endpoint with custom URL
-	@chmod +x scripts/test-api.sh
-	@API_URL=$(API_URL) ./scripts/test-api.sh login
+clean:
+	@echo "$(BLUE)Cleaning build artifacts$(CNone)"
+	@rm -rf bin/
+	@cd ui && rm -rf dist/
 
-.PHONY: test-users-custom
-test-users-custom: ## Test get users endpoint with custom URL
-	@chmod +x scripts/test-api.sh
-	@API_URL=$(API_URL) ./scripts/test-api.sh users
+
+docker.compose:
+	@echo "$(BLUE)Starting Docker Compose$(CNone)"
+	@docker compose up -d
+
+docker-compose-down:
+	@echo "$(BLUE)Stopping Docker Compose$(CNone)"
+	@docker-compose down

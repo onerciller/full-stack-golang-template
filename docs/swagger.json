@@ -227,20 +227,21 @@
             "description": "User login request",
             "type": "object",
             "required": [
-                "email",
-                "password"
+                "password",
+                "username"
             ],
             "properties": {
-                "email": {
-                    "description": "Email address of the user",
-                    "type": "string",
-                    "example": "john@example.com"
-                },
                 "password": {
                     "description": "User's password (min 6 characters)",
                     "type": "string",
                     "minLength": 6,
                     "example": "password123"
+                },
+                "username": {
+                    "description": "Username of the user",
+                    "type": "string",
+                    "minLength": 3,
+                    "example": "johndoe"
                 }
             }
         },

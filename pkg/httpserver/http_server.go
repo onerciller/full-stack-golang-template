@@ -42,7 +42,7 @@ func New(options ...Option) *HttpServer {
 
 	instance.Get("/swagger/*", adaptor.HTTPHandler(swagger.ServeSwaggerUI(swagger.SwaggerConfig{
 		SwaggerDocURL: "/swagger/doc.json",
-		AuthURL:       "/auth/login",
+		AuthURL:       "/auth/",
 	})))
 
 	for _, middleware := range config.Middlewares {

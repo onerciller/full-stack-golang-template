@@ -8,11 +8,11 @@ import (
 // @Description Base model with common fields
 type BaseModel struct {
 	// Record ID
-	ID uint `json:"id" gorm:"primarykey" example:"1"`
+	ID uint `json:"id" gorm:"primarykey"`
 	// Creation timestamp
-	CreatedAt time.Time `json:"created_at" example:"2024-02-19T14:20:00Z"`
+	CreatedAt time.Time `json:"created_at"`
 	// Last update timestamp
-	UpdatedAt time.Time `json:"updated_at" example:"2024-02-19T14:20:00Z"`
+	UpdatedAt time.Time `json:"updated_at"`
 	// Deletion timestamp, null if not deleted
-	DeletedAt *time.Time `json:"deleted_at,omitempty" gorm:"index" swaggertype:"string" example:"2024-02-19T14:20:00Z"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty" gorm:"index"`
 }

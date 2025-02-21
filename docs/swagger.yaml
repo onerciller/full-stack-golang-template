@@ -60,18 +60,19 @@ definitions:
   model.LoginRequest:
     description: User login request
     properties:
-      email:
-        description: Email address of the user
-        example: john@example.com
-        type: string
       password:
         description: User's password (min 6 characters)
         example: password123
         minLength: 6
         type: string
+      username:
+        description: Username of the user
+        example: johndoe
+        minLength: 3
+        type: string
     required:
-    - email
     - password
+    - username
     type: object
   model.RegisterRequest:
     description: User registration request
