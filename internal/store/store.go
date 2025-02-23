@@ -5,7 +5,6 @@ import (
 
 	"github.com/onerciller/fullstack-golang-template/internal/entity"
 	"github.com/onerciller/fullstack-golang-template/internal/store/user"
-	"github.com/samber/do"
 	"gorm.io/gorm"
 )
 
@@ -21,7 +20,6 @@ type UserStore interface {
 }
 
 // ProvideUserStore provides a user store
-func ProvideUserStore(di *do.Injector) (UserStore, error) {
-	db := do.MustInvoke[*gorm.DB](di)
-	return user.New(db), nil
+func NewUserStore(db *gorm.DB) UserStore {
+	return user.New(db)
 }

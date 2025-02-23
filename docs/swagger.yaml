@@ -21,25 +21,21 @@ definitions:
     properties:
       created_at:
         description: Creation timestamp
-        example: "2024-02-19T14:20:00Z"
         type: string
       deleted_at:
         description: Deletion timestamp, null if not deleted
-        example: "2024-02-19T14:20:00Z"
         type: string
       email:
         description: Email address of the user
         type: string
       id:
         description: Record ID
-        example: 1
         type: integer
       password:
         description: Password (hashed, not exposed in JSON)
         type: string
       updated_at:
         description: Last update timestamp
-        example: "2024-02-19T14:20:00Z"
         type: string
       username:
         description: Username of the user
@@ -50,11 +46,6 @@ definitions:
     properties:
       access_token:
         description: JWT access token
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        type: string
-      refresh_token:
-        description: JWT refresh token
-        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         type: string
     type: object
   model.LoginRequest:
@@ -62,12 +53,10 @@ definitions:
     properties:
       password:
         description: User's password (min 6 characters)
-        example: password123
         minLength: 6
         type: string
       username:
         description: Username of the user
-        example: johndoe
         minLength: 3
         type: string
     required:
@@ -79,16 +68,13 @@ definitions:
     properties:
       email:
         description: Email address of the user
-        example: john@example.com
         type: string
       password:
         description: Password (min 6 characters)
-        example: password123
         minLength: 6
         type: string
       username:
         description: Username (min 3 characters)
-        example: johndoe
         minLength: 3
         type: string
     required:
@@ -118,6 +104,31 @@ info:
   title: Fullstack Golang Template API
   version: "1.0"
 paths:
+  /api/v1/user:
+    get:
+      consumes:
+      - application/json
+      description: Get the current user's details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Current user details
+          schema:
+            $ref: '#/definitions/entity.User'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/apperror.AppError'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - user
   /api/v1/users:
     get:
       consumes:

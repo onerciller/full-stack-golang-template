@@ -60,6 +60,8 @@ export default function Login() {
         username: data.username,
         password: data.password,
       })
+
+      console.log("response", response)
       
       login(response.access_token, data.rememberMe)
       

@@ -24,6 +24,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/v1/user": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get the current user's details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get current user",
+                "responses": {
+                    "200": {
+                        "description": "Current user details",
+                        "schema": {
+                            "$ref": "#/definitions/entity.User"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.AppError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/apperror.AppError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/users": {
             "get": {
                 "security": [
@@ -179,13 +219,11 @@ const docTemplate = `{
             "properties": {
                 "created_at": {
                     "description": "Creation timestamp",
-                    "type": "string",
-                    "example": "2024-02-19T14:20:00Z"
+                    "type": "string"
                 },
                 "deleted_at": {
                     "description": "Deletion timestamp, null if not deleted",
-                    "type": "string",
-                    "example": "2024-02-19T14:20:00Z"
+                    "type": "string"
                 },
                 "email": {
                     "description": "Email address of the user",
@@ -193,8 +231,7 @@ const docTemplate = `{
                 },
                 "id": {
                     "description": "Record ID",
-                    "type": "integer",
-                    "example": 1
+                    "type": "integer"
                 },
                 "password": {
                     "description": "Password (hashed, not exposed in JSON)",
@@ -202,8 +239,7 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "description": "Last update timestamp",
-                    "type": "string",
-                    "example": "2024-02-19T14:20:00Z"
+                    "type": "string"
                 },
                 "username": {
                     "description": "Username of the user",
@@ -217,13 +253,7 @@ const docTemplate = `{
             "properties": {
                 "access_token": {
                     "description": "JWT access token",
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                },
-                "refresh_token": {
-                    "description": "JWT refresh token",
-                    "type": "string",
-                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    "type": "string"
                 }
             }
         },
@@ -238,14 +268,12 @@ const docTemplate = `{
                 "password": {
                     "description": "User's password (min 6 characters)",
                     "type": "string",
-                    "minLength": 6,
-                    "example": "password123"
+                    "minLength": 6
                 },
                 "username": {
                     "description": "Username of the user",
                     "type": "string",
-                    "minLength": 3,
-                    "example": "johndoe"
+                    "minLength": 3
                 }
             }
         },
@@ -260,20 +288,17 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "description": "Email address of the user",
-                    "type": "string",
-                    "example": "john@example.com"
+                    "type": "string"
                 },
                 "password": {
                     "description": "Password (min 6 characters)",
                     "type": "string",
-                    "minLength": 6,
-                    "example": "password123"
+                    "minLength": 6
                 },
                 "username": {
                     "description": "Username (min 3 characters)",
                     "type": "string",
-                    "minLength": 3,
-                    "example": "johndoe"
+                    "minLength": 3
                 }
             }
         },

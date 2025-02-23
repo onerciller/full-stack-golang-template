@@ -1,4 +1,4 @@
-import { Bell, User, LogOut, Settings } from "lucide-react"
+import { Bell, User, LogOut } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Link } from "react-router-dom"
 import { useAuth } from "@/lib/context/auth-context"
+import { useAuthenticatedUser } from '@/lib/queries/auth'
 
 const MobileLogo = () => (
   <Link to="/" className="flex items-center gap-2">
@@ -24,6 +25,8 @@ const MobileLogo = () => (
 
 export function Header() {
   const { isAuthenticated, logout } = useAuth()
+  const { data: user } = useAuthenticatedUser()
+  console.log(user)
   return (
     <header className="sticky top-0 z-40 border-b bg-white">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -40,8 +43,8 @@ export function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center gap-3 outline-none">
                 <div className="hidden sm:flex sm:flex-col sm:items-end sm:justify-center">
-                <p className="text-sm font-medium text-gray-900">Admin User</p>
-                <p className="text-xs text-gray-500">admin@example.com</p>
+                <p className="text-sm font-medium text-gray-900">{user?.username}</p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
               <div className="rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition-colors">
                 <User className="h-5 w-5" />
@@ -49,23 +52,10 @@ export function Header() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/profile" className="flex items-center cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/settings" className="flex items-center cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600 cursor-pointer">
+              <DropdownMenuSeparator />                          
+              <DropdownMenuItem className="text-red-600 cursor-pointer" onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span onClick={logout}>Log out</span>
+                <span>Log out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

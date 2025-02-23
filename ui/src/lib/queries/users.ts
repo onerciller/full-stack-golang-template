@@ -1,23 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
+import { UsersResponse, AppError } from '../model/index'
 
-interface User {
-  id: number
-  username: string
-  email: string
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
-}
-
-interface UsersResponse {
-  users: User[]
-}
-
-interface AppError {
-  code: string
-  message: string
-  status: number
-}
 
 const API_URL = 'http://localhost:3000'
 

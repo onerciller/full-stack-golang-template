@@ -1,6 +1,13 @@
 package main
 
 import (
+	"context"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+
+	// Import the package
 	_ "github.com/onerciller/fullstack-golang-template/docs" // This is required for Swagger documentation
 	"github.com/onerciller/fullstack-golang-template/provider"
 )
@@ -25,9 +32,21 @@ import (
 // @name Authorization
 // @description "Enter your Bearer token in the format: `Bearer {token}`"
 func main() {
-	container := provider.NewContainer()
-	container.RegisterProviders()
-	container.RegisterServices()
-	container.DatabaseMigrate()
-	container.Start()
+	// Initialize the Fx application.
+	app := provider.Bootstrap()
+
+	// Start the application.
+	if err := app.Start(context.Background()); err != nil {
+		log.Fatal("Failed to start application:", err)
+	}
+
+	// Listen for termination signals.
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
+	<-stop
+
+	// Stop the application.
+	if err := app.Stop(context.Background()); err != nil {
+		log.Fatal("Failed to stop application:", err)
+	}
 }

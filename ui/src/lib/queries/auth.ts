@@ -1,25 +1,6 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { LoginRequest, RegisterRequest, AuthResponse, AppError, User } from '../model'
 
-interface LoginRequest {
-  username: string
-  password: string
-}
-
-interface RegisterRequest {
-  username: string
-  email: string
-  password: string
-}
-
-interface AuthResponse {
-  access_token: string
-}
-
-interface AppError {
-  code: string
-  message: string
-  status: number
-}
 
 const API_URL = 'http://localhost:3000'
 
@@ -54,6 +35,35 @@ export function useRegister() {
         },
         body: JSON.stringify(userData),
       })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw error
+      }
+
+      return response.json()
+    },
+  })
+} 
+
+export function useAuthenticatedUser() {
+  return useQuery<User, AppError>({
+    queryKey: ['user'],
+    queryFn: async () => {
+
+      const token = localStorage.getItem('access_token')
+      console.log("token", token)
+      if (!token) {
+        throw new Error('No access token found')
+      }
+      
+      const response = await fetch(`${API_URL}/api/v1/user`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      console.log("response", response)
 
       if (!response.ok) {
         const error = await response.json()

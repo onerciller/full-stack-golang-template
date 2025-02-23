@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
+	_ "github.com/onerciller/fullstack-golang-template/docs" // This is required for Swagger documentation
 	"github.com/schmentle/go-swagger-auth-form/swagger"
 )
 
@@ -42,7 +43,7 @@ func New(options ...Option) *HttpServer {
 
 	instance.Get("/swagger/*", adaptor.HTTPHandler(swagger.ServeSwaggerUI(swagger.SwaggerConfig{
 		SwaggerDocURL: "/swagger/doc.json",
-		AuthURL:       "/auth/",
+		AuthURL:       "/auth/login",
 	})))
 
 	for _, middleware := range config.Middlewares {
@@ -62,7 +63,9 @@ func (s *HttpServer) Shutdown() error {
 }
 
 func (s *HttpServer) Start() error {
-	return s.FiberApp.Listen(fmt.Sprintf(":%s", s.port))
+	addr := fmt.Sprintf(":%s", s.port)
+	fmt.Printf("Server is starting on %s\n", addr)
+	return s.FiberApp.Listen(addr)
 }
 
 func WithServerHeader(serverHeader string) Option {

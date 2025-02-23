@@ -26,11 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = (token: string, remember = false) => {
-    if (remember) {
-      localStorage.setItem('access_token', token);
-    } else {
-      sessionStorage.setItem('access_token', token);
-    }
+    localStorage.setItem('access_token', token);
     setIsAuthenticated(true);
   };
 

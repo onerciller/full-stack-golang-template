@@ -35,3 +35,9 @@ type UsersResponse struct {
 	// List of users
 	Users []*entity.User `json:"users"`
 }
+
+type UserResponse struct {
+	Id       uint   `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
