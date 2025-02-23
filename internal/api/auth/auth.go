@@ -152,7 +152,7 @@ func (h *Handler) validateLogin(c *fiber.Ctx, req *model.LoginRequest) (*entity.
 }
 
 func (h *Handler) generateAndStoreTokens(c *fiber.Ctx, userID uint) (*model.AuthResponse, error) {
-	accessToken, err := h.JwtService.GenerateAccessToken(userID)
+	accessToken, err := h.JWT.GenerateAccessToken(userID)
 	if err != nil {
 		return nil, errors.ErrFailedToGenToken.ToBadRequestAppError()
 	}

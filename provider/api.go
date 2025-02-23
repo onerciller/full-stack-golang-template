@@ -16,8 +16,8 @@ func (h *Api) Provide(
 	httpServer *httpserver.HttpServer,
 ) {
 	api.Register(base.Handler{
-		UserStore:  userStore,
-		JwtService: jwtService,
-		App:        httpServer.FiberApp,
+		UserStore: userStore,
+		JWT:       jwtService,
+		App:       httpServer.FiberApp,
 	})
 }

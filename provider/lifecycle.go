@@ -24,11 +24,14 @@ func (c *Lifecycle) Provide(lc fx.Lifecycle, httpServer *httpserver.HttpServer, 
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
+			fmt.Println("Stopping HTTP server")
 			httpServer.Shutdown()
 			db, err := db.DB()
 			if err != nil {
+				fmt.Println("Error getting database connection")
 				return err
 			}
+			fmt.Println("Closing database connection")
 			return db.Close()
 		},
 	})
