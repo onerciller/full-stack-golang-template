@@ -1,0 +1,64 @@
+---
+description: File Stucture
+globs: 
+alwaysApply: false
+---
+# Ant Design Demo - Project Structure
+
+## Root Directory
+```
+/
+├── .cursor/               # Cursor IDE configuration
+├── public/                # Static assets
+├── src/                   # Source code
+├── node_modules/          # Dependencies
+├── .gitignore             # Git ignore file
+├── eslint.config.js       # ESLint configuration
+├── index.html             # Entry HTML file
+├── jsconfig.json          # JavaScript configuration
+├── package.json           # Package dependencies
+├── pnpm-lock.yaml         # PNPM lock file
+├── README.md              # Project documentation
+└── vite.config.js         # Vite configuration
+```
+
+## Source Directory Structure
+```
+src/
+├── assets/                # Static assets for the application
+├── components/            # Reusable UI components
+│   ├── layouts/           # Layout components
+│   │   ├── admin-layout.jsx       # Main admin layout wrapper
+│   │   ├── breadcrumb-nav.jsx     # Breadcrumb navigation
+│   │   ├── content-wrapper.jsx    # Content area wrapper
+│   │   ├── header-bar.jsx         # Top header bar
+│   │   └── side-menu.jsx          # Side navigation menu
+│   └── index.js           # Components barrel file
+├── pages/                 # Application pages/routes
+│   ├── customers.jsx      # Customers page
+│   ├── dashboard.jsx      # Dashboard page
+│   └── users.jsx          # Users page
+├── App.jsx                # Main application component
+├── index.css              # Global CSS
+└── main.jsx               # Application entry point
+```
+
+## Component Naming & Structure Conventions
+- Files use kebab-case naming (e.g., header-bar.jsx)
+- Layout components are in src/components/layouts/
+- Page components are in src/pages/
+- Props use camelCase naming convention
+
+## Styling Approach
+- Primarily uses inline styles within component JSX
+- Leverages Ant Design component system
+- Global styles defined in index.css
+
+## Import Order Convention
+1. React
+2. Ant Design components
+3. Ant Design icons
+4. External libraries
+5. Custom components
+6. Utilities
+7. Styles 

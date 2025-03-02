@@ -3,13 +3,13 @@ package main
 import (
 	"context"
 	"log"
-	"os"
-	"os/signal"
-	"syscall"
 
 	// Import the package
 	_ "github.com/onerciller/fullstack-golang-template/docs" // This is required for Swagger documentation
-	"github.com/onerciller/fullstack-golang-template/provider"
+	"github.com/onerciller/fullstack-golang-template/internal/auth"
+	"github.com/onerciller/fullstack-golang-template/internal/shared"
+	"github.com/onerciller/fullstack-golang-template/pkg/module"
+	"gorm.io/gorm"
 )
 
 // @title Fullstack Golang Template API
@@ -33,20 +33,23 @@ import (
 // @description "Enter your Bearer token in the format: `Bearer {token}`"
 func main() {
 	// Initialize the Fx application.
-	app := provider.Bootstrap()
+	app := module.RegisterWithDefault(
+		&module.AppLifecycleModule{
+			AutoMigrate: func(db *gorm.DB) error {
+				return db.AutoMigrate(auth.UserEntity{})
+			},
+		},
+		&shared.Module{},
+		&auth.Module{},
+	)
 
 	// Start the application.
 	if err := app.Start(context.Background()); err != nil {
 		log.Fatal("Failed to start application:", err)
 	}
 
-	// Listen for termination signals.
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-	<-stop
-
 	// Stop the application.
-	if err := app.Stop(context.Background()); err != nil {
+	if err := app.GracefulStop(context.Background()); err != nil {
 		log.Fatal("Failed to stop application:", err)
 	}
 }
